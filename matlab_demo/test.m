@@ -20,6 +20,9 @@ fprintf('image data %d %d %d %d %d %d\n', img_raw(2, 1), img_raw(2, 2), img_raw(
 
 img_raw = im2double(img_raw);
 
+fprintf('2 image data %d %d %d %d %d %d\n', img_raw(1, 1), img_raw(1, 2), img_raw(1, 3), img_raw(1, 4), img_raw(1, 5), img_raw(1, 6));
+fprintf('2 image data %d %d %d %d %d %d\n', img_raw(2, 1), img_raw(2, 2), img_raw(2, 3), img_raw(2, 4), img_raw(2, 5), img_raw(2, 6));
+
 img_size = size(img_raw);
 width = img_size(2);
 height = img_size(1);

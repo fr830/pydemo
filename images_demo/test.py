@@ -1,6 +1,14 @@
 import cv2
 import numpy as np
 
+'''
+1、图像转换为矩阵
+
+matrix = numpy.asarray(image)    
+2、矩阵转换为图像
+
+image = Image.fromarray(matrix)
+'''
 
 # 因为cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb) 与matlab中的rgb2ycbcr产生不同的结果，
 # 并且SR算法一般采用rgb2ycbcr，所以模仿生成y
@@ -27,6 +35,13 @@ def rgb2ycbcr(img, only_y=True):
         rlt /= 255.
     return rlt.astype(in_img_type)
 
+
+def im2double(im):
+    min_val = np.min(im.ravel())
+    max_val = np.max(im.ravel())
+    out = (im.astype('float') - min_val) / (max_val - min_val)
+    return out
+
 image_file = 'F:\\demo\\py\\pydemo\\data\\baboon.bmp'
 
 img = cv2.imread(image_file)
@@ -36,9 +51,8 @@ img_ycrcb = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
 b, g, r = cv2.split(img)
 y = rgb2ycbcr(img)
 
-image_data = np.array(y)
-print(image_data)
+y_ = y.astype(np.float64)/255
 
-cv2.imshow("img",y)
+cv2.imshow("img",y_)
 cv2.waitKey()
 
