@@ -52,3 +52,4 @@ def inference(input_tensor, regularizer):
 
     # 返回最后前向传播的结果
     return layer2
+
