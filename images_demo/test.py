@@ -2,12 +2,8 @@ import cv2
 import numpy as np
 
 '''
-1、图像转换为矩阵
-
-matrix = numpy.asarray(image)    
-2、矩阵转换为图像
-
-image = Image.fromarray(matrix)
+由于https://github.com/Jongchan/tensorflow-vdsr.git项目中的图像预处理是基于matlab的，
+需要装matlab的环境，因此转换为python处理
 '''
 
 # 因为cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb) 与matlab中的rgb2ycbcr产生不同的结果，
@@ -51,8 +47,19 @@ img_ycrcb = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
 b, g, r = cv2.split(img)
 y = rgb2ycbcr(img)
 
-y_ = y.astype(np.float64)/255
+y = y.astype(np.float64)/255
 
-cv2.imshow("img",y_)
+print(y.shape)
+
+weith = y.shape[1]
+height = y.shape[0]
+
+print(divmod(height, 12)[1])
+
+y = y[0 : height - divmod(height, 12)[1], 0 : weith - divmod(weith, 12)[1]]
+
+print(y.shape)
+
+cv2.imshow("img",y)
 cv2.waitKey()
 
