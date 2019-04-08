@@ -4,6 +4,11 @@ import numpy as np
 '''
 由于https://github.com/Jongchan/tensorflow-vdsr.git项目中的图像预处理是基于matlab的，
 需要装matlab的环境，因此转换为python处理
+
+具体步骤
+1. 读取图像，转换RGB为YCrCb，然后分离出Y分量（即亮度分量）为矩阵数组
+2. 转换矩阵元素值类型为float64
+3. 分割矩阵的宽高为12的倍数
 '''
 
 # 因为cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb) 与matlab中的rgb2ycbcr产生不同的结果，
