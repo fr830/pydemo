@@ -11,7 +11,7 @@ BATCH_SIZE = 100
 LEARNING_RATE_BASE = 0.8
 LEARNING_RATE_DECAY = 0.99
 REGULARIZATION_RATE = 0.0001
-TRAINING_STEPS = 30000
+TRAINING_STEPS = 30001
 MOVING_AVERAGE_DECAY = 0.99
 
 # 模型保存的路径和文件名
@@ -57,26 +57,20 @@ def train(mnist):
     with tf.Session() as sess:
         tf.global_variables_initializer().run()
 
-        # 在训练过程中不再测试模型在验证数据上的表现，验证和测试的过程将会有一个独
-        # 立的程序来完成。
+        # 在训练过程中不再测试模型在验证数据上的表现，验证和测试的过程将会有一个独立的程序来完成。
         for i in range(TRAINING_STEPS):
             xs, ys = mnist.train.next_batch(BATCH_SIZE)
-            _, loss_value, step = sess.run([train_op, loss, global_step],
-                                           feed_dict={x: xs, y_: ys})
+            _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
             # 每1000轮保存一次模型
             if i % 1000 == 0:
                 # 输出当前的训练情况。这里只输出了模型在当前训练batch上的损失
                 # 函数大小。通过损失函数的大小可以大概了解训练的情况。在验证数
                 # 据集上正确率的信息会有一个单独的程序来生成
-                print("After %d training step(s), loss on training "
-                      "batch is %g." % (step, loss_value))
+                print("After %d training step(s), loss on training batch is %g." % (step, loss_value))
                 # 保存当前的模型。注意这里给出了global_step参数，这样可以让每个
                 # 被保存的模型的文件名末尾加上训练的轮数，比如“model.ckpt-1000”，
                 # 表示训练1000轮之后得到的模型。
-                saver.save(
-                    sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME),
-                    global_step=global_step
-                )
+                saver.save(sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME), global_step=global_step)
 
 
 def main(argv=None):
