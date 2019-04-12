@@ -2,11 +2,17 @@ import time
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
+from tensorflow.python.framework import graph_util
+from tensorflow.python.platform import gfile
+
 # 加载mnist_inference.py 和mnist_train.py中定义的常量和函数。
 from ai_demo.mnist import mnist_inference
 from ai_demo.mnist import mnist_train
 from PIL import Image
 import numpy as np
+
+pb_file = './model/mnist.pb'
+
 
 def evaluate(mnist):
     with tf.Graph().as_default() as g:
@@ -25,7 +31,7 @@ def evaluate(mnist):
         # 所以这里用于计算正则化损失的函数被设置为None。
         y = mnist_inference.inference(x, None)
 
-        correct_prediction = tf.argmax(y, 1)
+        correct_prediction = tf.argmax(y, 1, name="output")
 
         # 通过变量重命名的方式来加载模型，这样在前向传播的过程中就不需要调用求滑动平均的函数来获取平均值了。这样就可以完全共用mnist_inference.py中定义的前向传播过程。
         variable_averages = tf.train.ExponentialMovingAverage(mnist_train.MOVING_AVERAGE_DECAY)
@@ -42,6 +48,11 @@ def evaluate(mnist):
                 ret = sess.run(correct_prediction, feed_dict=validate_feed)
 
                 print('预测结果为 ： ', ret[0])
+
+                constant_graph = graph_util.convert_variables_to_constants(sess, sess.graph_def, ['x-input', 'y-input', 'output'])
+                with tf.gfile.FastGFile(pb_file, mode='wb') as f:
+                    f.write(constant_graph.SerializeToString())
+
             else:
                 print("No checkpoint file found")
                 return

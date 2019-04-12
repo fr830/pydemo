@@ -9,7 +9,7 @@ from tensorflow.python import pywrap_tensorflow
 
 '''
 
-model_file = 'F:\\ai\\aidemo\\get_ckpt_note.py\\mdoels\\VDSR_adam_epoch_016.ckpt-57188'
+model_file = 'F:\\demo\\py\\pydemo\\ai_demo\\mnist\model\\model.ckpt-30001'
 
 checkpoint_path=os.path.join(model_file)
 reader=pywrap_tensorflow.NewCheckpointReader(checkpoint_path)

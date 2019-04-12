@@ -18,7 +18,6 @@ MOVING_AVERAGE_DECAY = 0.99
 MODEL_SAVE_PATH = "./model/"
 MODEL_NAME = "model.ckpt"
 
-
 def train(mnist):
     # 定义输入输出placeholder。
     x = tf.placeholder(tf.float32, [None, mnist_inference.INPUT_NODE], name='x-input')
@@ -71,7 +70,6 @@ def train(mnist):
                 # 被保存的模型的文件名末尾加上训练的轮数，比如“model.ckpt-1000”，
                 # 表示训练1000轮之后得到的模型。
                 saver.save(sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME), global_step=global_step)
-
 
 def main(argv=None):
     mnist = input_data.read_data_sets("./data", one_hot=True)

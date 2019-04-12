@@ -1,12 +1,10 @@
 import tensorflow as tf
 import os
 
-model_dir = 'F:/ai/models/inception_v3_2016_08_28_frozen/'
-model_name = 'inception_v3_2016_08_28_frozen.pb'
+model_file = 'F:\demo\\py\\pydemo\\ai_demo\\mnist\\model\\mnist.pb'
 
 def create_graph():
-    with tf.gfile.FastGFile(os.path.join(
-            model_dir, model_name), 'rb') as f:
+    with tf.gfile.FastGFile(model_file, 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         tf.import_graph_def(graph_def, name='')
