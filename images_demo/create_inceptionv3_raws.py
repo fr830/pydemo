@@ -85,6 +85,7 @@ def __resize_square_to_jpg(src, dst, size):
     dst_img.save(dst)
     return 0
 
+
 def convert_img(src,dest,size):
     print("Converting images for inception v3 network.")
 
