@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 def model(input_tensor):
-	with tf.device("/gpu:0"):
+	with tf.device("/cpu:0"):
 		weights = []
 		tensor = None
 
