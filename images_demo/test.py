@@ -8,7 +8,7 @@ import numpy as np
 具体步骤
 1. 读取图像，转换RGB为YCrCb，然后分离出Y分量（即亮度分量）为矩阵数组
 2. 转换矩阵元素值类型为float64
-3. 分割矩阵的宽高为12的倍数
+3. 分割矩阵的宽高为12的倍数  （为什么？）
 '''
 
 # 因为cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb) 与matlab中的rgb2ycbcr产生不同的结果，
@@ -47,9 +47,9 @@ image_file = 'F:\\demo\\py\\pydemo\\data\\baboon.bmp'
 
 img = cv2.imread(image_file)
 
-img_ycrcb = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
+# img_ycrcb = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
+# b, g, r = cv2.split(img)
 
-b, g, r = cv2.split(img)
 y = rgb2ycbcr(img)
 
 y = y.astype(np.float64)/255
@@ -58,8 +58,6 @@ print(y.shape)
 
 weith = y.shape[1]
 height = y.shape[0]
-
-print(divmod(height, 12)[1])
 
 y = y[0 : height - divmod(height, 12)[1], 0 : weith - divmod(weith, 12)[1]]
 

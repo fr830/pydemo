@@ -38,7 +38,9 @@ mat_dict = scipy.io.loadmat(mat_file)
 input_data = mat_dict["img_2"]
 
 interpreter.set_tensor(input_details[0]['index'], np.resize(input_data, (1, input_data.shape[0], input_data.shape[1], 1)).astype('float32'))
+
 interpreter.invoke()
+
 output_data = interpreter.get_tensor(output_details[0]['index'])
 
 output_data = np.resize(output_data, (input_data.shape[0], input_data.shape[1]))

@@ -17,6 +17,10 @@ with tf.Session() as sess:
     input = sess.graph.get_tensor_by_name('input:0')
     output = sess.graph.get_tensor_by_name('shared_model/Add:0')
 
+    # tensor_name_list = [tensor.name for tensor in tf.get_default_graph().as_graph_def().node]
+    # for tensor_name in tensor_name_list:
+    #     print(tensor_name, '\n')
+
     mat_dict = scipy.io.loadmat(mat_file)
     input_data = mat_dict["img_2"]
 
