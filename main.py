@@ -18,3 +18,8 @@ with tf.Session() as sess:
 	print(sess.run(x))
 	print(B[0 ,1 ,2])
 	print(sess.run(y[2 ,1 ,0]))
+
+
+def computeCost(X, y, theta):
+	inner = np.power(((X * theta.T) - y), 2)
+	return np.sum(inner) / (2 * len(X))
