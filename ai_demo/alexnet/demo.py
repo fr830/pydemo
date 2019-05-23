@@ -1,6 +1,6 @@
 
 import tensorflow as tf
-from ai_demo.alexnet.alexnet import AlexNet
+from alexnet import AlexNet
 
 #
 # train_file = 'D:/tensorflow/bvlc_alexnet/finetune_alexnet_with_tensorflow-master\train.txt'
@@ -60,7 +60,7 @@ from ai_demo.alexnet.alexnet import AlexNet
 #         img_batch, label_batch = sess.run(next_batch)
 #         acc = sess.run(accuracy, feed_dict={x: img_batch, y: label_batch, keep_prob: 1.})
 
-from ai_demo.alexnet.datagenerator import *
+from datagenerator import *
 import random
 from datetime import datetime
 
@@ -70,7 +70,7 @@ train_data, test_data = load_data()
 # 定义网络超参数
 learning_rate = 1e-4  # 学习率
 training_epoches = 40  # 训练轮数
-batch_size = 512  # 小批量大小
+batch_size = 256  # 小批量大小
 num_classes = 10
 train_layers = ['fc8', 'fc7', 'fc6']
 n_train = len(train_data)  # 训练集数据长度
