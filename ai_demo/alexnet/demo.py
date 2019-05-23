@@ -77,6 +77,7 @@ n_train = len(train_data)  # 训练集数据长度
 n_test = len(test_data)  # 测试卷数据长度
 image_size = (227, 227)  # 图片大小
 
+
 input_x = tf.placeholder(tf.float32, [batch_size, 227, 227, 3], name='input_x')
 input_y = tf.placeholder(tf.float32, [batch_size, num_classes], name='input_y')
 
