@@ -1,14 +1,13 @@
 
 import tensorflow as tf
 
-print(tf.__version__)
-print(tf.__path__)
+import tensorflow as tf
+import numpy as np
 
-from tensorflow.python.client import device_lib
+pool = np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3]])
 
-print(device_lib.list_local_devices())
+flat = tf.reshape(pool, [-1, 9])
 
-# tf.argmax 计算某一维最大值的索引， 0 代表计算列  1 代表行
-# tf.equal(A, B)是对比这两个矩阵或者向量的相等的元素  相等为 True， 否则为 False
-# tf.cast 布尔型转为dtype
-# tf.reduce_mean 求平均数
+with tf.Session() as sess:
+    val = sess.run(flat)
+    nn = 0
