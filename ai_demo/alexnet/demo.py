@@ -70,7 +70,7 @@ train_data, test_data = load_data()
 # 定义网络超参数
 learning_rate = 1e-4  # 学习率
 training_epoches = 40  # 训练轮数
-batch_size = 256  # 小批量大小
+batch_size = 512  # 小批量大小
 num_classes = 10
 train_layers = ['fc8', 'fc7', 'fc6']
 n_train = len(train_data)  # 训练集数据长度
@@ -96,7 +96,9 @@ saver = tf.train.Saver()
 
 train_op = tf.train.AdamOptimizer(learning_rate).minimize(loss)
 
-with tf.Session() as sess:
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+with tf.Session(config=config) as sess:
     sess.run(tf.global_variables_initializer())
 
     step = 0
