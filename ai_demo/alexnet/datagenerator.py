@@ -37,7 +37,7 @@ b'filenames'      一个长度为10000的list，对应包含data中每一张图�
 
 '''
 使用方法
-data = datagenerator()
+data = DataGenerator()
 data.save_images('./data', './cifar-10')
 '''
 
@@ -331,3 +331,8 @@ class DataGenerator(object):
             print('测试集前10张图片：', test_file_labels[i])
 
         print('测试集图片保存成功!\n')
+
+
+if __name__ == "__main__":
+    data = DataGenerator()
+    data.save_images('./data', './cifar-10')
