@@ -126,6 +126,6 @@ with tf.Session(config=config) as sess:
             test_accuracy, test_cost = sess.run([accuracy, loss], feed_dict={input_x: batch_x, input_y: batch_y})
             test_accuracy_sum.append(test_accuracy)
             test_cost_sum.append(test_cost)
-        print('Epoch {0}: Test set accuracy {1},cost {2}.'.format(i, np.mean(test_accuracy_sum), np.mean(test_cost_sum)))
+        print('Epoch {0}: Test set accuracy {1}, loss {2}.'.format(i, np.mean(test_accuracy_sum), np.mean(test_cost_sum)))
 
         saver.save(sess, os.path.join('./models', 'alexnet'), global_step=len(train_batchs)*i)

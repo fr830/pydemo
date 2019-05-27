@@ -6,8 +6,41 @@
 import argparse
 import numpy as np
 import os
+import shutil
 
 from PIL import Image
+
+
+def IsValidImage(img_path):
+    """
+    判断文件是否为有效（完整）的图片
+    :param img_path:图片路径
+    :return:True：有效 False：无效
+    """
+    bValid = True
+    try:
+        Image.open(img_path).verify()
+    except:
+        bValid = False
+    return bValid
+
+
+def transimg(img_path, dest_image):
+    """
+    转换图片格式
+    :param img_path:图片路径
+    :return: True：成功 False：失败
+    """
+    if IsValidImage(img_path):
+        try:
+            im = Image.open(img_path)
+            im.save(dest_image)
+            return True
+        except:
+            return False
+    else:
+        return False
+
 
 def __get_img_raw(img_filepath):
     img_filepath = os.path.abspath(img_filepath)
@@ -19,6 +52,7 @@ def __get_img_raw(img_filepath):
         raise RuntimeError('Require image with rgb but channel is %d' % img_ndarray.shape[2])
     # reverse last dimension: rgb -> bgr
     return img_ndarray
+
 
 def __create_mean_raw(img_raw, mean_rgb):
     if img_raw.shape[2] != 3:
@@ -39,6 +73,7 @@ def __create_mean_raw(img_raw, mean_rgb):
     # back to h, w, c
     mean_raw = np.transpose(mean_raw, (1, 2, 0))
     return mean_raw.astype(np.float32)
+
 
 def __create_raw_incv3(img_filepath, mean_rgb, div, req_bgr_raw, save_uint8):
     img_raw = __get_img_raw(img_filepath)
@@ -65,6 +100,7 @@ def __create_raw_incv3(img_filepath, mean_rgb, div, req_bgr_raw, save_uint8):
 
     return 0
 
+
 def __resize_square_to_jpg(src, dst, size):
     src_img = Image.open(src)
     # If black and white image, convert to rgb (all 3 channels the same)
@@ -86,8 +122,16 @@ def __resize_square_to_jpg(src, dst, size):
     return 0
 
 
-def convert_img(src,dest,size):
+def convert_img(src,dest, txt, size):
     print("Converting images for inception v3 network.")
+
+    print("Converting images for jpg.")
+    for root,dirs,files in os.walk(src):
+        for jpgs in files:
+            src_image=os.path.join(root, jpgs)
+            str = src_image.rsplit(".", 1)
+            des_image = str[0] + ".jpg"
+            transimg(src_image, des_image)
 
     print("Scaling to square: " + src)
     for root,dirs,files in os.walk(src):
@@ -107,12 +151,20 @@ def convert_img(src,dest,size):
                 mean_rgb=(128,128,128)
                 __create_raw_incv3(src_image,mean_rgb,128,False,False)
 
+    with open(txt, 'w') as f:
+        file_list = []
+        for root, dirs, files in os.walk(dest):
+            for file in files:
+                if ('.raw' in file):
+                    list.append(file_list + "\n")
+        f.writelines(file_list)
+
 
 def main():
     parser = argparse.ArgumentParser(description="Batch convert jpgs",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-d', '--dest',type=str, default='C:/Users/86529/Desktop/dest2')
-    parser.add_argument('-s','--size',type=int, default=299)
-    parser.add_argument('-i','--img_folder',type=str, default='C:/Users/86529/Desktop/dest')
+    parser.add_argument('-d', '--dest',type=str, default='C:/Users/86529/Desktop/data')
+    parser.add_argument('-s','--size',type=int, default=300)
+    parser.add_argument('-i','--img_folder',type=str, default='C:/Users/86529/Desktop/data2')
 
     args = parser.parse_args()
 
@@ -120,7 +172,12 @@ def main():
     src = os.path.abspath(args.img_folder)
     dest = os.path.abspath(args.dest)
 
-    convert_img(src,dest,size)
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+
+    os.mkdir(dest)
+
+    convert_img(src,dest,'C:/Users/86529/Desktop/data/raw_list.txt',size)
 
 if __name__ == '__main__':
     exit(main())

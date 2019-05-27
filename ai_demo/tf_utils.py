@@ -27,3 +27,12 @@ def fun_conv2d():
     conv = tf.nn.bias_add(conv, biases)
 
     conv = tf.nn.relu(conv)
+
+from tensorflow.python.framework import graph_util
+
+
+def tf_convert():
+    with tf.Session() as sess:
+        constant_graph = graph_util.convert_variables_to_constants(sess, sess.graph_def, ['inputs_raw', 'generator/generator_unit/output_stage/conv/Conv/BiasAdd'])
+        with tf.gfile.FastGFile('./SRGAN_pre-trained/srgan.pb', mode='wb') as f:
+            f.write(constant_graph.SerializeToString())

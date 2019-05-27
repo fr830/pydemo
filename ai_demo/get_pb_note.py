@@ -1,7 +1,7 @@
 import tensorflow as tf
 import os
 
-model_file = 'F:\demo\\py\\pydemo\\ai_demo\\mnist\\model\\mnist.pb'
+model_file = 'F:/demo/py/pydemo/ai_demo/models/mobilenetssd.pb'
 
 def create_graph():
     with tf.gfile.FastGFile(model_file, 'rb') as f:
