@@ -29,7 +29,7 @@ model = AlexNet(input_x, num_classes, train_layers)
 inference = model.fc8
 
 with tf.name_scope('loss'):
-    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=inference, labels=input_y))
+    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=inference, labels=input_y))
     tf.summary.scalar('loss', loss)
 
 with tf.name_scope('accuracy'):
