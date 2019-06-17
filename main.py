@@ -1,6 +1,8 @@
 
 import tensorflow as tf;
 import numpy as np;
+import sys
+
 
 class SquareTest(tf.test.TestCase):
 
