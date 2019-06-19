@@ -431,7 +431,10 @@ def batch_inputs(dataset, batch_size, train, num_preprocess_threads=None,
     if data_files is None:
       raise ValueError('No data files found for this dataset')
 
-    # Create filename_queue
+    # Create filename_queue\
+
+    # 生成文件名列表序列 queue
+    # shuffle 是否随即打乱列表  capacity 队列大小
     if train:
       filename_queue = tf.train.string_input_producer(data_files,
                                                       shuffle=True,
@@ -440,6 +443,7 @@ def batch_inputs(dataset, batch_size, train, num_preprocess_threads=None,
       filename_queue = tf.train.string_input_producer(data_files,
                                                       shuffle=False,
                                                       capacity=1)
+
     if num_preprocess_threads is None:
       num_preprocess_threads = FLAGS.num_preprocess_threads
 
@@ -460,10 +464,21 @@ def batch_inputs(dataset, batch_size, train, num_preprocess_threads=None,
     # 1 image uses 299*299*3*4 bytes = 1MB
     # The default input_queue_memory_factor is 16 implying a shuffling queue
     # size: examples_per_shard * 16 * 1MB = 17.6GB
-    min_queue_examples = examples_per_shard * FLAGS.input_queue_memory_factor
+
+    # 队列的最大长度 capacity 以及 出队后的最小长度
+    # 以下情况会发生阻断
+    # -队列长度=最小值, 执行dequeue
+    # -队列长度=最小值, 执行enqueue
+    # 直到队列长度满足条件 （即其他线程执行了enqueue/dequeue）, 才能继续.
+
+    # input_queue_memory_factor 输入的预处理图像队列大小 16
+    # 每张图片所占的内存大约是 300*300*3*4=1080000=1.08M
+
+    # tfrecord 文件是16个，每个tfrecord包含大约1024个样例 ，  16个文件所占用的内存大约是 16*1024*1M = 17.6GB
+    min_queue_examples = examples_per_shard * FLAGS.input_queue_memory_factor  # 1024*16 = 16384 = 16G
     if train:
       examples_queue = tf.RandomShuffleQueue(
-          capacity=min_queue_examples + 3 * batch_size,
+          capacity=min_queue_examples + 3 * batch_size,         # 16384 + 3*32 = 16384 + 96 = 16480
           min_after_dequeue=min_queue_examples,
           dtypes=[tf.string])
     else:
@@ -471,7 +486,9 @@ def batch_inputs(dataset, batch_size, train, num_preprocess_threads=None,
           capacity=examples_per_shard + 3 * batch_size,
           dtypes=[tf.string])
 
-    # Create multiple readers to populate the queue of examples.
+    # Create multiple readers to populate the queue of examples.  num_readers 4
+
+    # 创建4个 reader 追加到 tf.train.queue_runner
     if num_readers > 1:
       enqueue_ops = []
       for _ in range(num_readers):
@@ -479,18 +496,17 @@ def batch_inputs(dataset, batch_size, train, num_preprocess_threads=None,
         _, value = reader.read(filename_queue)
         enqueue_ops.append(examples_queue.enqueue([value]))
 
-      tf.train.queue_runner.add_queue_runner(
-          tf.train.queue_runner.QueueRunner(examples_queue, enqueue_ops))
+      tf.train.queue_runner.add_queue_runner(tf.train.queue_runner.QueueRunner(examples_queue, enqueue_ops))
       example_serialized = examples_queue.dequeue()
     else:
       reader = dataset.reader()
       _, example_serialized = reader.read(filename_queue)
 
+
     images_and_labels = []
     for thread_id in range(num_preprocess_threads):
       # Parse a serialized Example proto to extract the image and metadata.
-      image_buffer, label_index, bbox, _ = parse_example_proto(
-          example_serialized)
+      image_buffer, label_index, bbox, _ = parse_example_proto(example_serialized)
       image = image_preprocessing(image_buffer, bbox, train, thread_id)
       images_and_labels.append([image, label_index])
 

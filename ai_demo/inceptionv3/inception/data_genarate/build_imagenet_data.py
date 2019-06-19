@@ -698,10 +698,8 @@ def main(unused_argv):
   image_to_bboxes = _build_bounding_box_lookup(FLAGS.bounding_box_file)
 
   # Run it!
-  _process_dataset('validation', FLAGS.validation_directory,
-                   FLAGS.validation_shards, synset_to_human, image_to_bboxes)
-  _process_dataset('train', FLAGS.train_directory, FLAGS.train_shards,
-                   synset_to_human, image_to_bboxes)
+  _process_dataset('validation', FLAGS.validation_directory, FLAGS.validation_shards, synset_to_human, image_to_bboxes)
+  _process_dataset('train', FLAGS.train_directory, FLAGS.train_shards, synset_to_human, image_to_bboxes)
 
 
 if __name__ == '__main__':

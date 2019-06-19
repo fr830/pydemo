@@ -297,8 +297,7 @@ def train(dataset):
 
     # Group all updates to into a single train op.
     batchnorm_updates_op = tf.group(*batchnorm_updates)
-    train_op = tf.group(apply_gradient_op, variables_averages_op,
-                        batchnorm_updates_op)
+    train_op = tf.group(apply_gradient_op, variables_averages_op, batchnorm_updates_op)
 
     # Create a saver.
     saver = tf.train.Saver(tf.global_variables())
