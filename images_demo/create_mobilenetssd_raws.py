@@ -156,7 +156,7 @@ def convert_img(src,dest, txt, size):
         for root, dirs, files in os.walk(dest):
             for file in files:
                 if ('.raw' in file):
-                    list.append(file_list + "\n")
+                    file_list.append(file + "\n")
         f.writelines(file_list)
 
 
